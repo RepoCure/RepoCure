@@ -3,23 +3,28 @@ requires = ["hatchling>=1.25"]
 build-backend = "hatchling.build"
 
 [project]
-name = "devdoctor"
-version = "0.1.0"
-description = "Your project's personal doctor."
+name = "repocure"
+version = "1.0.0"
+description = "A fast, local-first repository health scanner for security and quality."
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
 authors = [{name = "deviq404"}]
+keywords = ["repository", "security", "code-quality", "static-analysis", "cli"]
 dependencies = []
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0", "ruff>=0.8"]
 
+[project.urls]
+Homepage = "https://github.com/deviq404/DevDoctor"
+Issues = "https://github.com/deviq404/DevDoctor/issues"
+
 [project.scripts]
-devdoctor = "devdoctor.cli:main"
+repocure = "repocure.cli:main"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/devdoctor"]
+packages = ["src/repocure"]
 
 [tool.pytest.ini_options]
 addopts = "-q"
@@ -28,4 +33,3 @@ testpaths = ["tests"]
 [tool.ruff]
 line-length = 100
 target-version = "py310"
-

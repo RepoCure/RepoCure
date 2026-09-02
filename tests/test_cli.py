@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from devdoctor.cli import main
+from repocure.cli import main
 
 
 def test_cli_writes_json_report(tmp_path: Path) -> None:
@@ -13,3 +13,8 @@ def test_cli_writes_json_report(tmp_path: Path) -> None:
 
 def test_fail_under_returns_failure(tmp_path: Path) -> None:
     assert main(["scan", str(tmp_path), "--fail-under", "100"]) == 1
+
+
+def test_list_analyzers(capsys) -> None:
+    assert main(["list-analyzers"]) == 0
+    assert "security" in capsys.readouterr().out

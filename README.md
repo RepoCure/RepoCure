@@ -1,45 +1,45 @@
-# DevDoctor
+# RepoCure
 
-> Your project's personal doctor.
+> Diagnose your repository. Cure what matters.
 
-DevDoctor is a fast, dependency-free Python CLI that scans a software project, assigns a health score, and produces actionable findings.
+RepoCure is a fast, local-first Python CLI that scans a software project, assigns a health score, and produces actionable findings without uploading source code.
 
 ## Features
 
 - Security checks for likely secrets, private keys, unsafe `eval`, and shell execution.
 - Dependency, documentation, tests, Git, Docker, and Python performance checks.
-- Text, JSON, and Markdown reports.
+- Text, JSON, Markdown, standalone HTML, and SARIF reports.
 - CI-friendly score thresholds and analyzer selection.
 - Offline by default: source code never leaves your machine.
 
 ## Quick start
 
 ```bash
-pip install -e .
-devdoctor scan .
+pip install repocure
+repocure scan .
 ```
 
 Generate a shareable report:
 
 ```bash
-devdoctor scan . --format markdown --output REPORT.md
+repocure scan . --format html --output repocure-report.html
 ```
 
 Fail CI when the score is below 80:
 
 ```bash
-devdoctor scan . --fail-under 80
+repocure scan . --fail-under 80
 ```
 
 Run one analyzer:
 
 ```bash
-devdoctor scan . --analyzer security
+repocure scan . --analyzer security
 ```
 
 ## Status
 
-DevDoctor is currently an alpha MVP. Findings are signals that require developer review; they are not proof of a vulnerability.
+RepoCure findings are review signals and may include false positives; they are not proof of a vulnerability.
 
 ## Contributing
 
@@ -48,4 +48,3 @@ See [CONTRIBUTING.md](CONTRIBUTING.md). Security reports should follow [SECURITY
 ## License
 
 MIT
-

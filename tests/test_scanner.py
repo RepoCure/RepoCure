@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from devdoctor.scanner import Scanner
+from repocure.scanner import Scanner
 
 
 def test_clean_minimal_project_scores_100(tmp_path: Path) -> None:

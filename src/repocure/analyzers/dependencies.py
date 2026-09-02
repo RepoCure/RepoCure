@@ -20,7 +20,7 @@ def analyze(root: Path) -> list[Finding]:
         Finding(
             "DEP001",
             "No dependency manifest found",
-            "DevDoctor could not identify a supported dependency manifest.",
+            "RepoCure could not identify a supported dependency manifest.",
             "low",
             "dependencies",
             recommendation="Add the dependency manifest used by the project.",

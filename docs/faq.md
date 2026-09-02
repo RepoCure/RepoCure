@@ -1,6 +1,6 @@
 # FAQ
 
-## Does DevDoctor upload my code?
+## Does RepoCure upload my code?
 
 No. The MVP runs locally and has no runtime network dependency.
 

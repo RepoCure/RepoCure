@@ -1,4 +1,4 @@
-"""Built-in DevDoctor analyzers."""
+"""Built-in RepoCure analyzers."""
 
 from .dependencies import analyze as dependencies
 from .docker import analyze as docker
