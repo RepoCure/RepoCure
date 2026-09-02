@@ -9,7 +9,7 @@ description = "A fast, local-first repository health scanner for security and qu
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
-authors = [{name = "deviq404"}]
+authors = [{name = "RepoCure"}]
 keywords = ["repository", "security", "code-quality", "static-analysis", "cli"]
 dependencies = []
 
@@ -17,8 +17,9 @@ dependencies = []
 dev = ["pytest>=8.0", "ruff>=0.8"]
 
 [project.urls]
-Homepage = "https://github.com/deviq404/DevDoctor"
-Issues = "https://github.com/deviq404/DevDoctor/issues"
+Homepage = "https://github.com/RepoCure/RepoCure"
+Documentation = "https://github.com/RepoCure/RepoCure/tree/main/docs"
+Issues = "https://github.com/RepoCure/RepoCure/issues"
 
 [project.scripts]
 repocure = "repocure.cli:main"
