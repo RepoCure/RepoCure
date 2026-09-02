@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+from collections import Counter
 from dataclasses import asdict, dataclass, field
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Literal
 
@@ -30,6 +32,9 @@ class ScanReport:
     findings: list[Finding] = field(default_factory=list)
     analyzers: list[str] = field(default_factory=list)
     source: str | None = None
+    files_scanned: int = 0
+    duration_ms: int = 0
+    generated_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     @property
     def score(self) -> int:
@@ -42,11 +47,25 @@ class ScanReport:
             "healthy" if self.score >= 80 else "needs-attention" if self.score >= 50 else "critical"
         )
 
+    @property
+    def severity_counts(self) -> dict[str, int]:
+        counts = Counter(item.severity for item in self.findings)
+        return {name: counts.get(name, 0) for name in ("critical", "high", "medium", "low", "info")}
+
+    @property
+    def category_counts(self) -> dict[str, int]:
+        return dict(sorted(Counter(item.category for item in self.findings).items()))
+
     def to_dict(self) -> dict[str, object]:
         return {
             "source": self.source or str(self.root),
             "score": self.score,
             "status": self.status,
+            "generated_at": self.generated_at,
+            "duration_ms": self.duration_ms,
+            "files_scanned": self.files_scanned,
+            "severity_counts": self.severity_counts,
+            "category_counts": self.category_counts,
             "analyzers": self.analyzers,
             "findings": [item.to_dict() for item in self.findings],
         }

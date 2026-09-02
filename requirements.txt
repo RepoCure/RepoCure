@@ -1,2 +1,2 @@
-# RepoCure has no runtime dependencies.
-
+rich>=14.1,<15
+tomli>=2.2; python_version < "3.11"

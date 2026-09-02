@@ -11,6 +11,9 @@ def test_clean_minimal_project_scores_100(tmp_path: Path) -> None:
     tests = tmp_path / "tests"
     tests.mkdir()
     (tests / "test_sample.py").write_text("def test_ok(): assert True", encoding="utf-8")
+    workflows = tmp_path / ".github" / "workflows"
+    workflows.mkdir(parents=True)
+    (workflows / "tests.yml").write_text("name: tests", encoding="utf-8")
     report = Scanner(tmp_path).scan()
     assert report.score == 100
     assert report.status == "healthy"

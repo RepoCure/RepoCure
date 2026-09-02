@@ -6,6 +6,7 @@ import ast
 import re
 from pathlib import Path
 
+from ..config import Config
 from ..models import Finding
 from ..utils import iter_files, relative
 
@@ -59,6 +60,7 @@ def _python_findings(text: str, path: Path, root: Path) -> list[Finding]:
         return []
     findings: list[Finding] = []
     for node in ast.walk(tree):
+        call_name = _call_name(node.func) if isinstance(node, ast.Call) else ""
         if (
             isinstance(node, ast.Call)
             and isinstance(node.func, ast.Name)
@@ -76,13 +78,31 @@ def _python_findings(text: str, path: Path, root: Path) -> list[Finding]:
             findings.append(
                 _finding("SEC004", "Shell execution enabled", "medium", path, root, node.lineno)
             )
+        if call_name in {"pickle.load", "pickle.loads", "marshal.load", "marshal.loads"}:
+            findings.append(
+                _finding("SEC005", "Unsafe deserialization", "high", path, root, node.lineno)
+            )
+        if call_name in {"hashlib.md5", "hashlib.sha1"}:
+            findings.append(
+                _finding("SEC006", "Weak cryptographic hash", "medium", path, root, node.lineno)
+            )
     return findings
 
 
-def analyze(root: Path) -> list[Finding]:
+def _call_name(node: ast.expr) -> str:
+    parts: list[str] = []
+    while isinstance(node, ast.Attribute):
+        parts.append(node.attr)
+        node = node.value
+    if isinstance(node, ast.Name):
+        parts.append(node.id)
+    return ".".join(reversed(parts))
+
+
+def analyze(root: Path, config: Config) -> list[Finding]:
     findings: list[Finding] = []
     suffixes = {".py", ".js", ".ts", ".env", ".yml", ".yaml", ".json", ".toml"}
-    for path in iter_files(root, suffixes):
+    for path in iter_files(root, suffixes, config):
         try:
             text = path.read_text(encoding="utf-8", errors="ignore")
         except OSError:

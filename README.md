@@ -1,64 +1,129 @@
-# RepoCure
+<p align="center"><img src="https://raw.githubusercontent.com/RepoCure/RepoCure/main/assets/banner.svg" alt="RepoCure — Diagnose your repository. Cure what matters." width="100%"></p>
 
-> Diagnose your repository. Cure what matters.
+<p align="center">
+  <a href="https://pypi.org/project/repocure/"><img src="https://img.shields.io/pypi/v/repocure?color=2dd4bf" alt="PyPI version"></a>
+  <a href="https://pypi.org/project/repocure/"><img src="https://img.shields.io/pypi/pyversions/repocure" alt="Python versions"></a>
+  <a href="https://github.com/RepoCure/RepoCure/actions/workflows/tests.yml"><img src="https://github.com/RepoCure/RepoCure/actions/workflows/tests.yml/badge.svg" alt="Tests"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/RepoCure/RepoCure" alt="MIT license"></a>
+</p>
 
-RepoCure is a fast, local-first Python CLI that scans a software project, assigns a health score, and produces actionable findings without uploading source code.
+RepoCure is a local-first repository health scanner for developers, maintainers, and CI pipelines. It turns security, quality, dependency, Docker, Git, documentation, testing, and CI signals into one clear score and actionable report.
 
-## Features
+```console
+$ repocure scan https://github.com/OWNER/REPOSITORY
+╭────────────────────────── RepoCure  92/100  healthy ──────────────────────────╮
+│ Source: https://github.com/OWNER/REPOSITORY                                    │
+│ Scanned 184 files in 241 ms · 1 finding                                        │
+╰─────────────────────────────────────────────────────────────────────────────────╯
+Severity   Rule     Finding                       Location
+MEDIUM     SEC004   Shell execution enabled        tools/build.py:42
+```
 
-- Security checks for likely secrets, private keys, unsafe `eval`, and shell execution.
-- Dependency, documentation, tests, Git, Docker, and Python performance checks.
-- Text, JSON, Markdown, standalone HTML, and SARIF reports.
-- CI-friendly score thresholds and analyzer selection.
-- Offline by default: source code never leaves your machine.
+## Why RepoCure?
 
-## Quick start
+- **One command:** scan a local directory or public GitHub URL.
+- **Local-first:** source code is analyzed on your machine and never sent to RepoCure.
+- **CI-native:** stable exit codes, SARIF, JSON, Markdown, HTML, and a reusable GitHub Action.
+- **Actionable:** every finding includes a rule, severity, location, and recommendation.
+- **Configurable:** exclude generated code, disable accepted rules, and enforce a score threshold.
+- **Safe by design:** HTTPS-only remote scans, shallow clones, file limits, no symlink traversal, and no code execution.
+
+## Install
 
 ```bash
-pip install repocure
+python -m pip install --upgrade repocure
+```
+
+Requires Python 3.10+ and Git for remote repository scans.
+
+## Scan
+
+```bash
+# Current directory
 repocure scan .
-```
 
-Scan any public GitHub repository directly:
-
-```bash
+# Public GitHub repository
 repocure scan https://github.com/OWNER/REPOSITORY
-```
 
-RepoCure performs a shallow clone into a temporary directory, scans it locally, and removes the temporary copy automatically.
-
-Generate a shareable report:
-
-```bash
+# Interactive standalone dashboard
 repocure scan . --format html --output repocure-report.html
-```
 
-Fail CI when the score is below 80:
+# GitHub Code Scanning / other SARIF consumers
+repocure scan . --format sarif --output repocure.sarif
 
-```bash
+# Enforce quality in CI
 repocure scan . --fail-under 80
 ```
 
-Run one analyzer:
+## Configure
+
+Create a starter configuration:
 
 ```bash
-repocure scan . --analyzer security
+repocure init
 ```
 
-Scan GitHub and generate a shareable HTML report:
+`.repocure.toml`:
+
+```toml
+[repocure]
+fail_under = 80
+exclude = ["vendor/**", "generated/**"]
+disabled_rules = ["QLT002"]
+max_file_size = 1000000
+max_files = 20000
+```
+
+CLI flags override configuration values:
 
 ```bash
-repocure scan https://github.com/OWNER/REPOSITORY --format html --output report.html
+repocure scan . --exclude "fixtures/**" --disable-rule QLT002
+repocure rules
+repocure list-analyzers
 ```
 
-## Status
+## GitHub Action
 
-RepoCure findings are review signals and may include false positives; they are not proof of a vulnerability.
+```yaml
+name: Repository health
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  repocure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: RepoCure/RepoCure@v2
+        with:
+          fail-under: "80"
+```
 
-## Contributing
+See the [GitHub Action guide](docs/github-action.md) for SARIF integration.
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Security reports should follow [SECURITY.md](SECURITY.md).
+## Reports
 
-## License
+| Format | Best for |
+|---|---|
+| Rich terminal | Fast local feedback |
+| HTML | Searchable, shareable offline dashboard |
+| SARIF | GitHub Code Scanning and security platforms |
+| JSON | Automation and integrations |
+| Markdown | Pull requests and project artifacts |
+| Text | Logs and minimal terminals |
 
-MIT
+## Built-in analyzers
+
+`security` · `quality` · `dependencies` · `performance` · `docker` · `git` · `documentation` · `tests` · `ci`
+
+RepoCure findings are review signals, not proof of a vulnerability. Review results in context before changing production code.
+
+## Community
+
+- [Documentation](docs/installation.md)
+- [Roadmap](docs/roadmap.md)
+- [Contributing](CONTRIBUTING.md)
+- [Security policy](SECURITY.md)
+- [Code of conduct](CODE_OF_CONDUCT.md)
+
+Released under the [MIT License](LICENSE).

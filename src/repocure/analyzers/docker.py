@@ -2,14 +2,18 @@
 
 from pathlib import Path
 
+from ..config import Config
 from ..models import Finding
+from ..utils import read_text
 
 
-def analyze(root: Path) -> list[Finding]:
+def analyze(root: Path, config: Config) -> list[Finding]:
     dockerfile = root / "Dockerfile"
     if not dockerfile.exists():
         return []
-    text = dockerfile.read_text(encoding="utf-8", errors="ignore")
+    text = read_text(dockerfile, root, config)
+    if text is None:
+        return []
     findings: list[Finding] = []
     if ":latest" in text:
         findings.append(
@@ -32,6 +36,18 @@ def analyze(root: Path) -> list[Finding]:
                 "low",
                 "docker",
                 recommendation="Add a .dockerignore file.",
+            )
+        )
+    if not any(line.strip().upper().startswith("USER ") for line in text.splitlines()):
+        findings.append(
+            Finding(
+                "DCK003",
+                "Container may run as root",
+                "No USER instruction was found in the Dockerfile.",
+                "medium",
+                "docker",
+                "Dockerfile",
+                recommendation="Create and switch to a non-root runtime user.",
             )
         )
     return findings

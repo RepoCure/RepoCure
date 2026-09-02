@@ -23,7 +23,10 @@ def is_github_url(value: str) -> bool:
     parsed = urlparse(value)
     return (
         parsed.scheme == "https"
-        and parsed.hostname == "github.com"
+        and parsed.netloc.lower() == "github.com"
+        and not parsed.params
+        and not parsed.query
+        and not parsed.fragment
         and bool(GITHUB_PATH.fullmatch(parsed.path))
     )
 

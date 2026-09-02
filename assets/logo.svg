@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title id="title">RepoCure logo</title>
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#60a5fa"/><stop offset="1" stop-color="#2dd4bf"/></linearGradient></defs>
+  <rect width="128" height="128" rx="30" fill="#08111f"/>
+  <path d="M64 18 105 34v29c0 25-16 41-41 49C39 104 23 88 23 63V34z" fill="url(#g)" opacity=".18" stroke="url(#g)" stroke-width="6"/>
+  <path d="M34 66h18l7-17 11 33 8-16h16" fill="none" stroke="url(#g)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

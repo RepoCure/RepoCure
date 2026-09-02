@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" role="img" aria-labelledby="title desc">
+  <title id="title">RepoCure</title><desc id="desc">Diagnose your repository. Cure what matters.</desc>
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#07111f"/><stop offset="1" stop-color="#142b49"/></linearGradient><linearGradient id="line"><stop stop-color="#60a5fa"/><stop offset="1" stop-color="#2dd4bf"/></linearGradient></defs>
+  <rect width="1200" height="360" rx="30" fill="url(#bg)"/><circle cx="1060" cy="30" r="250" fill="#2dd4bf" opacity=".06"/><circle cx="80" cy="350" r="240" fill="#60a5fa" opacity=".08"/>
+  <path d="M110 190h70l28-64 42 126 34-62h76" fill="none" stroke="url(#line)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="430" y="170" fill="#f1f5f9" font-family="system-ui,sans-serif" font-size="78" font-weight="800">RepoCure</text>
+  <text x="434" y="225" fill="#9fb3cc" font-family="system-ui,sans-serif" font-size="27">Diagnose your repository. Cure what matters.</text>
+  <text x="434" y="275" fill="#5eead4" font-family="ui-monospace,monospace" font-size="20">security · quality · dependencies · CI · reports</text>
+</svg>

@@ -18,3 +18,14 @@ def test_fail_under_returns_failure(tmp_path: Path) -> None:
 def test_list_analyzers(capsys) -> None:
     assert main(["list-analyzers"]) == 0
     assert "security" in capsys.readouterr().out
+
+
+def test_rules_command(capsys) -> None:
+    assert main(["rules"]) == 0
+    assert "SEC001" in capsys.readouterr().out
+
+
+def test_init_creates_configuration(tmp_path: Path) -> None:
+    assert main(["init", str(tmp_path)]) == 0
+    assert "[repocure]" in (tmp_path / ".repocure.toml").read_text(encoding="utf-8")
+    assert main(["init", str(tmp_path)]) == 2

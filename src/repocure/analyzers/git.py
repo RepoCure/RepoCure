@@ -2,10 +2,11 @@
 
 from pathlib import Path
 
+from ..config import Config
 from ..models import Finding
 
 
-def analyze(root: Path) -> list[Finding]:
+def analyze(root: Path, config: Config) -> list[Finding]:
     findings: list[Finding] = []
     if not (root / ".gitignore").is_file():
         findings.append(

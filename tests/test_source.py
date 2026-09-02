@@ -15,7 +15,14 @@ def test_accepts_repository_urls(url: str) -> None:
 
 @pytest.mark.parametrize(
     "url",
-    ["http://github.com/owner/repo", "https://example.com/owner/repo", "https://github.com/owner"],
+    [
+        "http://github.com/owner/repo",
+        "https://example.com/owner/repo",
+        "https://github.com/owner",
+        "https://user@github.com/owner/repo",
+        "https://github.com/owner/repo?ref=main",
+        "https://github.com/owner/repo#readme",
+    ],
 )
 def test_rejects_unsafe_or_invalid_urls(url: str) -> None:
     assert not is_github_url(url)

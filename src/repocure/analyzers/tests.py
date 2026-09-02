@@ -2,15 +2,16 @@
 
 from pathlib import Path
 
+from ..config import Config
 from ..models import Finding
+from ..utils import iter_files, relative
 
 
-def analyze(root: Path) -> list[Finding]:
-    candidates = [root / "tests", root / "test", root / "spec"]
+def analyze(root: Path, config: Config) -> list[Finding]:
+    test_directories = {"tests", "test", "spec"}
     has_tests = any(
-        path.is_dir()
-        and any(item.is_file() and item.name != ".gitkeep" for item in path.rglob("*"))
-        for path in candidates
+        relative(path, root).split("/", 1)[0] in test_directories and path.name != ".gitkeep"
+        for path in iter_files(root, config=config)
     )
     if has_tests:
         return []

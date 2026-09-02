@@ -5,6 +5,7 @@ from __future__ import annotations
 import ast
 from pathlib import Path
 
+from ..config import Config
 from ..models import Finding
 from ..utils import iter_files, relative
 
@@ -24,9 +25,9 @@ class Visitor(ast.NodeVisitor):
     visit_AsyncFor = visit_For
 
 
-def analyze(root: Path) -> list[Finding]:
+def analyze(root: Path, config: Config) -> list[Finding]:
     findings: list[Finding] = []
-    for path in iter_files(root, {".py"}):
+    for path in iter_files(root, {".py"}, config):
         try:
             tree = ast.parse(path.read_text(encoding="utf-8"))
         except (OSError, SyntaxError, UnicodeError):

@@ -9,5 +9,5 @@ def test_all_renderers_include_score() -> None:
     assert "97/100" in render_text(report)
     assert '"score": 97' in render_json(report)
     assert "97/100" in render_markdown(report)
-    assert "97/100" in render_html(report)
+    assert "97<small>/100" in render_html(report)
     assert '"version": "2.1.0"' in render_sarif(report)
