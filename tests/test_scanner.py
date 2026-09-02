@@ -24,6 +24,13 @@ def test_security_finds_eval(tmp_path: Path) -> None:
     assert report.findings[0].line == 1
 
 
+def test_security_ignores_eval_inside_string(tmp_path: Path) -> None:
+    source = tmp_path / "test_example.py"
+    source.write_text('sample = "eval(user_input)"\n', encoding="utf-8")
+    report = Scanner(tmp_path, ["security"]).scan()
+    assert not report.findings
+
+
 def test_unknown_analyzer_is_rejected(tmp_path: Path) -> None:
     with pytest.raises(ValueError, match="Unknown analyzer"):
         Scanner(tmp_path, ["missing"]).scan()
