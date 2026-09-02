@@ -29,6 +29,7 @@ class ScanReport:
     root: Path
     findings: list[Finding] = field(default_factory=list)
     analyzers: list[str] = field(default_factory=list)
+    source: str | None = None
 
     @property
     def score(self) -> int:
@@ -43,7 +44,7 @@ class ScanReport:
 
     def to_dict(self) -> dict[str, object]:
         return {
-            "root": str(self.root),
+            "source": self.source or str(self.root),
             "score": self.score,
             "status": self.status,
             "analyzers": self.analyzers,

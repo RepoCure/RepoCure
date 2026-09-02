@@ -19,6 +19,14 @@ pip install repocure
 repocure scan .
 ```
 
+Scan any public GitHub repository directly:
+
+```bash
+repocure scan https://github.com/OWNER/REPOSITORY
+```
+
+RepoCure performs a shallow clone into a temporary directory, scans it locally, and removes the temporary copy automatically.
+
 Generate a shareable report:
 
 ```bash
@@ -35,6 +43,12 @@ Run one analyzer:
 
 ```bash
 repocure scan . --analyzer security
+```
+
+Scan GitHub and generate a shareable HTML report:
+
+```bash
+repocure scan https://github.com/OWNER/REPOSITORY --format html --output report.html
 ```
 
 ## Status

@@ -10,9 +10,12 @@ from .models import Finding, ScanReport
 
 
 class Scanner:
-    def __init__(self, root: str | Path, analyzers: Iterable[str] | None = None) -> None:
+    def __init__(
+        self, root: str | Path, analyzers: Iterable[str] | None = None, source: str | None = None
+    ) -> None:
         self.root = Path(root).expanduser().resolve()
         self.analyzer_names = list(analyzers or BUILTIN_ANALYZERS)
+        self.source = source
 
     def scan(self) -> ScanReport:
         if not self.root.is_dir():
@@ -25,4 +28,4 @@ class Scanner:
             findings.extend(BUILTIN_ANALYZERS[name](self.root))
         order = {"critical": 0, "high": 1, "medium": 2, "low": 3, "info": 4}
         findings.sort(key=lambda item: (order[item.severity], item.rule_id, item.path or ""))
-        return ScanReport(self.root, findings, self.analyzer_names.copy())
+        return ScanReport(self.root, findings, self.analyzer_names.copy(), self.source)

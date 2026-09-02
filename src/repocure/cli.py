@@ -10,6 +10,7 @@ from . import __version__
 from .analyzers import BUILTIN_ANALYZERS
 from .report import render_html, render_json, render_markdown, render_sarif, render_text
 from .scanner import Scanner
+from .source import SourceError, project_source
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -20,7 +21,7 @@ def build_parser() -> argparse.ArgumentParser:
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("list-analyzers", help="list available analyzers")
     scan = commands.add_parser("scan", help="scan a project")
-    scan.add_argument("path", nargs="?", default=".")
+    scan.add_argument("source", nargs="?", default=".", help="local path or HTTPS GitHub URL")
     scan.add_argument(
         "--format", choices=("text", "json", "markdown", "html", "sarif"), default="text"
     )
@@ -36,8 +37,9 @@ def main(argv: list[str] | None = None) -> int:
         print("\n".join(BUILTIN_ANALYZERS))
         return 0
     try:
-        report = Scanner(args.path, args.analyzers).scan()
-    except ValueError as error:
+        with project_source(args.source) as (path, label):
+            report = Scanner(path, args.analyzers, source=label).scan()
+    except (ValueError, SourceError) as error:
         print(f"error: {error}", file=sys.stderr)
         return 2
     renderers = {

@@ -11,6 +11,7 @@ from .models import ScanReport
 def render_text(report: ScanReport) -> str:
     lines = [
         f"RepoCure score: {report.score}/100 ({report.status})",
+        f"Source: {report.source or report.root}",
         f"Findings: {len(report.findings)}",
     ]
     for item in report.findings:
@@ -28,6 +29,8 @@ def render_markdown(report: ScanReport) -> str:
         "# RepoCure Report",
         "",
         f"**Project health: {report.score}/100 — {report.status}**",
+        "",
+        f"Source: `{report.source or report.root}`",
         "",
         "## Findings",
         "",
@@ -66,6 +69,7 @@ body{{font:16px system-ui,sans-serif;max-width:1100px;margin:40px auto;padding:0
 th,td{{padding:12px;border-bottom:1px solid #dbe3ef;text-align:left;vertical-align:top}}
 .critical,.high{{color:#b91c1c;font-weight:700}}.medium{{color:#a16207;font-weight:700}}.low{{color:#0369a1;font-weight:700}}
 </style></head><body><h1>RepoCure Report</h1><div class="score">{report.score}/100</div>
+<p>Source: <strong>{escape(report.source or str(report.root))}</strong></p>
 <p>Status: <strong>{escape(report.status)}</strong> · Findings: {len(report.findings)}</p>
 <table><thead><tr><th>Severity</th><th>Rule</th><th>Finding</th><th>Location</th><th>Recommendation</th></tr></thead>
 <tbody>{rows}</tbody></table></body></html>\n"""
@@ -111,7 +115,7 @@ def render_sarif(report: ScanReport) -> str:
                 "tool": {
                     "driver": {
                         "name": "RepoCure",
-                        "version": "1.0.0",
+                        "version": "1.1.0",
                         "rules": list(rules.values()),
                     }
                 },
